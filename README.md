@@ -136,3 +136,4 @@ For workflow validation without RunPod, see `workflow/wan22_local_test.json` whi
 MIT — with credit to [wlsdml1114/generate_video](https://github.com/wlsdml1114/generate_video) for the original ComfyUI serverless pattern.
 
 <!-- rebuild: retrigger RunPod build tests (wan2) -->
+<!-- rebuild: retrigger RunPod build tests (wan2-2) -->
