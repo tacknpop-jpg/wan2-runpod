@@ -86,7 +86,7 @@
   },
   "136": {
     "inputs": {
-      "model_name": "umt5-xxl-enc-bf16.safetensors",
+      "model_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
       "precision": "bf16",
       "load_device": "offload_device",
       "quantization": "disabled"
@@ -230,7 +230,7 @@
   },
   "279": {
     "inputs": {
-      "lora_0": "high_noise_model.safetensors",
+      "lora_0": "HIGH/Wan_2_2_I2V_A14B_HIGH_lightx2v_4step_lora_v1030_rank_64_bf16.safetensors",
       "strength_0": 1,
       "lora_1": "none",
       "strength_1": 1,
@@ -392,7 +392,7 @@
   },
   "553": {
     "inputs": {
-      "lora_0": "low_noise_model.safetensors",
+      "lora_0": "LOW/Wan2.2_i2v_A14b_low_noise_lora_rank64_lightx2v_4step_1022.safetensors",
       "strength_0": 1,
       "lora_1": "none",
       "strength_1": 1,
