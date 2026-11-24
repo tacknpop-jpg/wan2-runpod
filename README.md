@@ -141,3 +141,5 @@ MIT — with credit to [wlsdml1114/generate_video](https://github.com/wlsdml1114
 <!-- rebuild: retrigger RunPod build tests (wan2-3) -->
 
 <!-- rebuild: retrigger RunPod build tests (wan2-4) -->
+
+<!-- rebuild: auto-retry 2026-11-24 23:18 JST -->
