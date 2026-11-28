@@ -17,6 +17,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build with Depot
-        run: depot build --project 9p6j4hpb6f -t ghcr.io/tacknpop-jpg/wan2-runpod:depot-1 --push .
+        run: depot build --project 9p6j4hpb6f -t ghcr.io/tacknpop-jpg/wan2-runpod:depot-2 --push .
         env:
           DEPOT_TOKEN: ${{ secrets.DEPOT_TOKEN }}
