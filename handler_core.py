@@ -44,7 +44,7 @@ import urllib.parse
 import binascii
 import subprocess
 import time
-import random
+import random, shutil
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -112,16 +112,16 @@ def validate_input(job_input: dict) -> tuple[dict, str | None]:
 
 
 def resolve_image(job_input: dict, task_id: str) -> tuple[str, str | None]:
-    """Resolve image input to a local file path. Returns (path, error_or_none)."""
-    temp_dir = task_id
+    """Resolve image input to a file in ComfyUI's input dir. Returns (path, error_or_none). ComfyUI LoadImage only accepts a filename inside its input dir, so callers must pass os.path.basename(path) to the workflow."""
+    temp_dir = os.getenv("COMFYUI_INPUT_DIR", "/ComfyUI/input"); os.makedirs(temp_dir, exist_ok=True)
 
     # Priority: image_base64 > image_url > image_path > image (auto-detect)
     if "image_base64" in job_input:
-        return save_base64(job_input["image_base64"], temp_dir, "input_image.jpg")
+        return save_base64(job_input["image_base64"], temp_dir, f"input_{uuid.uuid4()}.jpg")
     elif "image_url" in job_input:
-        return download_url(job_input["image_url"], temp_dir, "input_image.jpg")
+        return download_url(job_input["image_url"], temp_dir, f"input_{uuid.uuid4()}.jpg")
     elif "image_path" in job_input:
-        path = job_input["image_path"]
+        path = shutil.copyfile(job_input["image_path"], os.path.join(temp_dir, f"input_{uuid.uuid4()}.jpg")) if os.path.exists(job_input["image_path"]) else job_input["image_path"]
         if not os.path.exists(path):
             return "", f"Image file not found: {path}"
         return path, None
@@ -129,11 +129,11 @@ def resolve_image(job_input: dict, task_id: str) -> tuple[str, str | None]:
         data = job_input["image"]
         if isinstance(data, str):
             if data.startswith("http://") or data.startswith("https://"):
-                return download_url(data, temp_dir, "input_image.jpg")
+                return download_url(data, temp_dir, f"input_{uuid.uuid4()}.jpg")
             elif os.path.exists(data):
-                return data, None
+                return shutil.copyfile(data, os.path.join(temp_dir, f"input_{uuid.uuid4()}.jpg")), None
             else:
-                return save_base64(data, temp_dir, "input_image.jpg")
+                return save_base64(data, temp_dir, f"input_{uuid.uuid4()}.jpg")
         return "", "image parameter must be a string"
 
     return "", "No image provided"
@@ -258,7 +258,7 @@ def process_request(job_input: dict) -> dict:
         logger.error("Validation failed: %s", error)
         return {"error": error}
 
-    # 2. Resolve image to local path
+    # 2. Resolve image into ComfyUI's input dir
     image_path, error = resolve_image(job_input, task_id)
     if error:
         logger.error("Image resolution failed: %s", error)
@@ -285,7 +285,7 @@ def process_request(job_input: dict) -> dict:
     workflow = load_workflow("workflow/wan22_i2v.json")
 
     # Image
-    workflow["244"]["inputs"]["image"] = image_path
+    workflow["244"]["inputs"]["image"] = os.path.basename(image_path)  # LoadImage resolves by filename in its input dir
 
     # Prompt
     workflow["135"]["inputs"]["positive_prompt"] = prompt_text
