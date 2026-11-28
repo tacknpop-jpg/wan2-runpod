@@ -86,12 +86,11 @@
   },
   "136": {
     "inputs": {
-      "model_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
-      "precision": "bf16",
-      "load_device": "offload_device",
-      "quantization": "disabled"
+      "clip_name": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+      "type": "wan",
+      "device": "default"
     },
-    "class_type": "LoadWanVideoT5TextEncoder",
+    "class_type": "CLIPLoader",
     "_meta": {
       "title": "WanVideo T5 Text Encoder Loader"
     }
