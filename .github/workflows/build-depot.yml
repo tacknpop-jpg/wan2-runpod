@@ -1,0 +1,22 @@
+name: build-depot
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  packages: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: depot/setup-action@v1
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build with Depot
+        run: depot build --project 9p6j4hpb6f -t ghcr.io/tacknpop-jpg/wan2-runpod:depot-1 --push .
+        env:
+          DEPOT_TOKEN: ${{ secrets.DEPOT_TOKEN }}
