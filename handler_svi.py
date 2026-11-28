@@ -171,7 +171,7 @@ def process_request(job_input: dict) -> dict:
     workflow = load_workflow("workflow/svi_v1.json")
 
     # Node 1: LoadImage
-    workflow["1"]["inputs"]["image"] = image_path
+    workflow["1"]["inputs"]["image"] = os.path.basename(image_path)  # LoadImage resolves by filename in its input dir
 
     # Node 2: ImageResizeKJv2 — match output dimensions so ref isn't cropped
     workflow["2"]["inputs"]["width"] = width
@@ -267,7 +267,7 @@ def process_request(job_input: dict) -> dict:
         workflow["60"] = {
             "class_type": "LoadImage",
             "inputs": {
-                "image": end_image_path,
+                "image": os.path.basename(end_image_path),
                 "upload": "image",
             },
             "_meta": {"title": "LoadImage_EndFrame"},
